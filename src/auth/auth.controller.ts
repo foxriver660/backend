@@ -14,6 +14,13 @@ import { AuthDto } from './dto/auth.dto';
 export class AuthController {
   constructor(private readonly AuthService: AuthService) {}
 
+  @Post('/login')
+  @UsePipes(new ValidationPipe())
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() dto: AuthDto) {
+    return this.AuthService.login(dto);
+  }
+
   @Post('/register')
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)

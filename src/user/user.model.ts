@@ -5,9 +5,6 @@ import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 export interface UserModel extends Base {}
 
 export class UserModel extends TimeStamps {
-  static findOne(arg0: { email: string }) {
-    throw new Error('Method not implemented.');
-  }
   @prop({ unique: true })
   email: string;
 
