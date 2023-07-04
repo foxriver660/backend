@@ -8,11 +8,13 @@ import { InjectModel } from 'nestjs-typegoose';
 import { UserModel } from 'src/user/user.model';
 import { AuthDto } from './dto/auth.dto';
 import { hash, genSalt, compare } from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(UserModel) private UserModel: ModelType<UserModel>
+    @InjectModel(UserModel) private UserModel: ModelType<UserModel>,
+    private readonly jwtService: JwtService
   ) {}
 
   async login(dto: AuthDto) {
@@ -45,5 +47,16 @@ export class AuthService {
     if (!isValidPassword) {
       throw new UnauthorizedException('Password is invalid');
     }
+  }
+  // !СОЗДАНИЕ ТОКЕНОВ
+  async issueTokenPair(userId: any) {
+    const data = { _id: userId };
+    const refreshToken = await this.jwtService.signAsync(data, {
+      expiresIn: '15d',
+    });
+    const accessToken = await this.jwtService.signAsync(data, {
+      expiresIn: '1h',
+    });
+    return { refreshToken, accessToken };
   }
 }
