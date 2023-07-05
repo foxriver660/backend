@@ -21,28 +21,16 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЯ
-  @Get('profile')
-  @Auth()
-  async getProfile(@User('_id') _id: string) {
-    return this.userService.byId(_id);
-  }
-  // ПОЛУЧЕНИЕ КОЛИЧЕСТВА ПОЛЬЗОВАТЕЛЕЙ
-  @Get('count')
-  @Auth('admin')
-  async getCountUsers() {
-    return this.userService.getCount();
-  }
   // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЕЙ
   @Get()
   @Auth('admin')
   async getUsers(@Query('searchParam') searchParam?: string) {
     return this.userService.getAll(searchParam);
   }
-  // ПОЛУЧЕНИЕ КОНКРЕТНОГО ПОЛЬЗОВАТЕЛЯ
-  @Get(':id')
-  @Auth('admin')
-  async getUser(@Param('id', IdValidationPipe) _id: string) {
+  // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЯ
+  @Get('profile')
+  @Auth()
+  async getProfile(@User('_id') _id: string) {
     return this.userService.byId(_id);
   }
   // АПДЕЙТ ПОЛЬЗОВАТЕЛЯ
@@ -56,7 +44,19 @@ export class UserController {
   ) {
     return this.userService.updateProfile(_id, profile);
   }
+  // ПОЛУЧЕНИЕ КОЛИЧЕСТВА ПОЛЬЗОВАТЕЛЕЙ
+  @Get('count')
+  @Auth('admin')
+  async getCountUsers() {
+    return this.userService.getCount();
+  }
 
+  // ПОЛУЧЕНИЕ КОНКРЕТНОГО ПОЛЬЗОВАТЕЛЯ
+  @Get(':id')
+  @Auth('admin')
+  async getUser(@Param('id', IdValidationPipe) _id: string) {
+    return this.userService.byId(_id);
+  }
   // АПДЕЙТ ПОЛЬЗОВАТЕЛЯ АДМИН
   @UsePipes(new ValidationPipe())
   @Put(':id')
