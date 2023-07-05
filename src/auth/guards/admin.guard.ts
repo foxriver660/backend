@@ -6,10 +6,11 @@ import {
 import { Reflector } from '@nestjs/core';
 import { UserModel } from 'src/user/user.model';
 
-export class onlyAdminGuard implements CanActivate {
+export class OnlyAdminGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
-  canActivate(context: ExecutionContext) {
+  canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<{ user: UserModel }>();
+    console.log(request.user);
     const user = request.user;
     if (!user.isAdmin) throw new ForbiddenException('Only admin route');
     return user.isAdmin;
