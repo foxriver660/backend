@@ -9,6 +9,7 @@ import { UserModel } from 'src/user/user.model';
 import { AuthDto } from './dto/auth.dto';
 import { hash, genSalt, compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,9 +19,28 @@ export class AuthService {
   ) {}
 
   async login(dto: AuthDto) {
-    return this.validateUser(dto);
+    const user = await this.validateUser(dto);
+    const tokens = await this.issueTokenPair(String(user._id));
+    return {
+      user: this.returnUserFields(user),
+      ...tokens,
+    };
   }
-
+  async getNewTokens({ refreshToken }: RefreshTokenDto) {
+    if (!refreshToken) {
+      throw new UnauthorizedException('You must sign in first');
+    }
+    const result = await this.jwtService.verifyAsync(refreshToken);
+    if (!result) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    const user = await this.UserModel.findById(result._id);
+    const tokens = await this.issueTokenPair(String(user._id));
+    return {
+      user: this.returnUserFields(user),
+      ...tokens,
+    };
+  }
   async register(dto: AuthDto) {
     const oldUser = await this.UserModel.findOne({ email: dto.email });
     if (oldUser) {
@@ -31,7 +51,12 @@ export class AuthService {
       email: dto.email,
       password: await hash(dto.password, salt),
     });
-    return newUser.save();
+    await newUser.save();
+    const tokens = await this.issueTokenPair(String(newUser._id));
+    return {
+      user: this.returnUserFields(newUser),
+      ...tokens,
+    };
   }
 
   // !ВАЛИДАЦИЯ
@@ -47,6 +72,7 @@ export class AuthService {
     if (!isValidPassword) {
       throw new UnauthorizedException('Password is invalid');
     }
+    return user;
   }
   // !СОЗДАНИЕ ТОКЕНОВ
   async issueTokenPair(userId: any) {
@@ -58,5 +84,13 @@ export class AuthService {
       expiresIn: '1h',
     });
     return { refreshToken, accessToken };
+  }
+  // !ВОЗВРАТ ПОЛЕЙ
+  returnUserFields(user: UserModel) {
+    return {
+      _id: user._id,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    };
   }
 }
