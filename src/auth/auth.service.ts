@@ -31,6 +31,7 @@ export class AuthService {
       throw new UnauthorizedException('You must sign in first');
     }
     const result = await this.jwtService.verifyAsync(refreshToken);
+
     if (!result) {
       throw new UnauthorizedException('Invalid refresh token');
     }
