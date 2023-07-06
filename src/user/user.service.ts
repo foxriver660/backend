@@ -32,6 +32,7 @@ export class UserService {
       user.isAdmin = dto.isAdmin;
     }
     await user.save();
+    return;
   }
   // КОЛ_ВО ЮЗЕРОВ
   async getCount() {
