@@ -8,7 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { GenreModule } from './genre/genre.module';
 import { FileModule } from './file/file.module';
-import { ActorController } from './actor/actor.controller';
+
 import { ActorModule } from './actor/actor.module';
 
 @Module({
