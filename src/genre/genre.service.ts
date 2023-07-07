@@ -11,9 +11,9 @@ export class GenreService {
   ) {}
 
   async byId(_id: string) {
-    const genre = await this.GenreModel.findById(_id);
-    if (!genre) throw new NotFoundException('Genre not found');
-    return genre;
+    const doc = await this.GenreModel.findById(_id);
+    if (!doc) throw new NotFoundException('Genre not found');
+    return doc;
   }
   async bySlug(slug: string) {
     const doc = await this.GenreModel.findOne({ slug }).exec();
@@ -24,13 +24,13 @@ export class GenreService {
   }
   //! UPDATE GENRE
   async update(_id: string, dto: CreateGenreDto) {
-    const updateGenre = await this.GenreModel.findByIdAndUpdate(_id, dto, {
+    const doc = await this.GenreModel.findByIdAndUpdate(_id, dto, {
       new: true,
     }).exec();
-    if (!updateGenre) {
+    if (!doc) {
       throw new NotFoundException('Genre not found');
     }
-    return updateGenre;
+    return doc;
   }
   //! CREATE GENRE
   async create() {
@@ -77,10 +77,10 @@ export class GenreService {
   }
 
   async delete(id: string) {
-    const deleteGenre = await this.GenreModel.findByIdAndDelete(id).exec();
-    if (!deleteGenre) {
+    const doc = await this.GenreModel.findByIdAndDelete(id).exec();
+    if (!doc) {
       throw new NotFoundException('Genre not found');
     }
-    return deleteGenre;
+    return doc;
   }
 }

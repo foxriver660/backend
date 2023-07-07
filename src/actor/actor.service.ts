@@ -23,13 +23,13 @@ export class ActorService {
   }
 
   async update(_id: string, dto: ActorDto) {
-    const updateActor = await this.ActorModel.findByIdAndUpdate(_id, dto, {
+    const doc = await this.ActorModel.findByIdAndUpdate(_id, dto, {
       new: true,
     }).exec();
-    if (!updateActor) {
+    if (!doc) {
       throw new NotFoundException('Actor not found');
     }
-    return updateActor;
+    return doc;
   }
 
   async create() {
@@ -65,10 +65,10 @@ export class ActorService {
   }
 
   async delete(id: string) {
-    const deleteActor = await this.ActorModel.findByIdAndDelete(id).exec();
-    if (!deleteActor) {
+    const doc = await this.ActorModel.findByIdAndDelete(id).exec();
+    if (!doc) {
       throw new NotFoundException('actor not found');
     }
-    return deleteActor;
+    return doc;
   }
 }
