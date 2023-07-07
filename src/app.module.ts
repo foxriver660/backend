@@ -25,7 +25,7 @@ import { ActorModule } from './actor/actor.module';
     FileModule,
     ActorModule,
   ],
-  controllers: [AppController, ActorController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
