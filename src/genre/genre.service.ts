@@ -15,37 +15,60 @@ export class GenreService {
     if (!genre) throw new NotFoundException('Genre not found');
     return genre;
   }
-  // АПДЕЙТ ЖАНРА
+  async bySlug(slug: string) {
+    return this.GenreModel.findOne({ slug }).exec();
+  }
+  //! UPDATE GENRE
   async update(_id: string, dto: CreateGenreDto) {
     return this.GenreModel.findByIdAndUpdate(_id, dto, {
       new: true,
     }).exec();
   }
-  // КОЛ_ВО ЮЗЕРОВ
-  async getCount() {
-    return this.UserModel.find().count().exec();
+  //! CREATE GENRE
+  async create() {
+    const defaultValue: CreateGenreDto = {
+      name: '',
+      slug: '',
+      description: '',
+      icon: '',
+    };
+    const genre = await this.GenreModel.create(defaultValue);
+    return genre._id;
   }
-  // ПОЛУЧИТЬ ВСЕ ЮЗЕРОВ
+  // ! GET COLLECTIONS GENRE
+  async getCollectionsGenre() {
+    const genres = await this.getAll();
+    const collection = genres;
+    return collection;
+  }
+
+  // ! GET ALL GENRES
   async getAll(searchParam?: string) {
     let options = {};
     if (searchParam) {
       options = {
         $or: [
           {
-            email: new RegExp(searchParam, 'i'),
+            name: new RegExp(searchParam, 'i'),
+          },
+          {
+            slug: new RegExp(searchParam, 'i'),
+          },
+          {
+            description: new RegExp(searchParam, 'i'),
           },
         ],
       };
     }
-    return this.UserModel.find(options)
-      .select('-password -updatedAt -__v')
+    return this.GenreModel.find(options)
+      .select(' -updatedAt -__v')
       .sort({
         createdAt: 'desc',
       })
       .exec();
   }
-  // УДАЛИТЬ ЮЗЕРА
+  //! УДАЛИТЬ ЖАНР
   async delete(id: string) {
-    return this.UserModel.findByIdAndDelete(id).exec();
+    return this.GenreModel.findByIdAndDelete(id).exec();
   }
 }
