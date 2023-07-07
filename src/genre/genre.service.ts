@@ -16,7 +16,11 @@ export class GenreService {
     return genre;
   }
   async bySlug(slug: string) {
-    return this.GenreModel.findOne({ slug }).exec();
+    const doc = await this.GenreModel.findOne({ slug }).exec();
+    if (!doc) {
+      throw new NotFoundException('Actor not found');
+    }
+    return doc;
   }
   //! UPDATE GENRE
   async update(_id: string, dto: CreateGenreDto) {

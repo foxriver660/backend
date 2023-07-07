@@ -15,7 +15,11 @@ export class ActorService {
     return actor;
   }
   async bySlug(slug: string) {
-    return this.ActorModel.findOne({ slug }).exec();
+    const doc = await this.ActorModel.findOne({ slug }).exec();
+    if (!doc) {
+      throw new NotFoundException('Actor not found');
+    }
+    return doc;
   }
 
   async update(_id: string, dto: ActorDto) {
