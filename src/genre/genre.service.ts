@@ -67,7 +67,7 @@ export class GenreService {
       })
       .exec();
   }
-  //! УДАЛИТЬ ЖАНР
+
   async delete(id: string) {
     return this.GenreModel.findByIdAndDelete(id).exec();
   }

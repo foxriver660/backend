@@ -21,19 +21,18 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЕЙ
   @Get()
   @Auth('admin')
   async getUsers(@Query('searchParam') searchParam?: string) {
     return this.userService.getAll(searchParam);
   }
-  // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЯ
+
   @Get('profile')
   @Auth()
   async getProfile(@User('_id') _id: string) {
     return this.userService.byId(_id);
   }
-  // АПДЕЙТ ПОЛЬЗОВАТЕЛЯ
+
   @UsePipes(new ValidationPipe())
   @Put('profile')
   @HttpCode(HttpStatus.OK)
@@ -44,20 +43,19 @@ export class UserController {
   ) {
     return this.userService.updateProfile(_id, profile);
   }
-  // ПОЛУЧЕНИЕ КОЛИЧЕСТВА ПОЛЬЗОВАТЕЛЕЙ
+
   @Get('count')
   @Auth('admin')
   async getCountUsers() {
     return this.userService.getCount();
   }
 
-  // ПОЛУЧЕНИЕ КОНКРЕТНОГО ПОЛЬЗОВАТЕЛЯ
   @Get(':id')
   @Auth('admin')
   async getUser(@Param('id', IdValidationPipe) _id: string) {
     return this.userService.byId(_id);
   }
-  // АПДЕЙТ ПОЛЬЗОВАТЕЛЯ АДМИН
+
   @UsePipes(new ValidationPipe())
   @Put(':id')
   @HttpCode(HttpStatus.OK)
@@ -69,7 +67,6 @@ export class UserController {
     return this.userService.updateProfile(_id, profile);
   }
 
-  // УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @Auth('admin')

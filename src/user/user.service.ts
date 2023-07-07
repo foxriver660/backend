@@ -16,7 +16,7 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
-  // АПДЕЙТ ПРОФИЛЯ
+
   async updateProfile(_id: string, dto: UpdateUserDto) {
     const user = await this.byId(_id);
     const isSameUser = await this.UserModel.findOne({ email: dto.email });
@@ -34,11 +34,11 @@ export class UserService {
     await user.save();
     return;
   }
-  // КОЛ_ВО ЮЗЕРОВ
+
   async getCount() {
     return this.UserModel.find().count().exec();
   }
-  // ПОЛУЧИТЬ ВСЕ ЮЗЕРОВ
+
   async getAll(searchParam?: string) {
     let options = {};
     if (searchParam) {
@@ -57,7 +57,7 @@ export class UserService {
       })
       .exec();
   }
-  // УДАЛИТЬ ЮЗЕРА
+
   async delete(id: string) {
     return this.UserModel.findByIdAndDelete(id).exec();
   }
