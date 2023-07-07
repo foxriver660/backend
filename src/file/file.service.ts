@@ -7,19 +7,22 @@ import { FileResponse } from './file.interface';
 export class FileService {
   async saveFiles(
     files: Express.Multer.File[],
-    folder: string
+    folder: string = 'default'
   ): Promise<FileResponse[]> {
     const uploadFolder = `${path}/uploads/${folder}`;
+    console.log(uploadFolder);
     await ensureDir(uploadFolder);
     const res: FileResponse[] = await Promise.all(
       files.map(async (file) => {
         await writeFile(`${uploadFolder}/${file.originalname}`, file.buffer);
+
         return {
           url: `/uploads/${folder}/${file.originalname}`,
           name: file.originalname,
         };
       })
     );
+
     return res;
   }
 }
