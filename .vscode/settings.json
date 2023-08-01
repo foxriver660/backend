@@ -16,5 +16,6 @@
     "ЮЗЕРА",
     "CРАВНИВАЕМ",
     "nestjs"
-  ]
+  ],
+  "npm-scripts.showStartNotification": false
 }
