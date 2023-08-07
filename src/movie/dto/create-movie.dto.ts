@@ -30,9 +30,6 @@ export class CreateMovieDto {
   @IsString()
   slug: string;
 
-  @IsString()
-  description: string;
-
   @IsObject()
   parameters?: Parameters;
 
@@ -47,6 +44,5 @@ export class CreateMovieDto {
   @IsString({ each: true })
   actors: string[];
 
-  @IsBoolean()
   isSendTelegram?: string;
 }

@@ -18,7 +18,7 @@ import { IdValidationPipe } from 'src/pipes/id.validation.pipe';
 import { Types } from 'mongoose';
 import { CreateMovieDto } from './dto/create-movie.dto';
 
-@Controller('movie')
+@Controller('movies')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
@@ -30,15 +30,18 @@ export class MovieController {
     return this.movieService.create();
   }
 
-  @Get('/by-slug/:slug')
+  @Get('by-slug/:slug')
   async bySlug(@Param('slug') slug: string) {
     return this.movieService.bySlug(slug);
   }
-  @Get('/by-actor/:actorId')
+
+  @Get('by-actor/:actorId')
   async getByActorId(@Param('actorId') actorId: Types.ObjectId) {
     return this.movieService.byActor(actorId);
   }
-  @Post('/by-genres')
+
+  @UsePipes(new ValidationPipe())
+  @Post('by-genres')
   async getByGenres(@Body('genresIds') genresIds: Types.ObjectId[]) {
     return this.movieService.byGenres(genresIds);
   }
@@ -46,12 +49,12 @@ export class MovieController {
   async getAll(@Query('searchParam') searchParam?: string) {
     return this.movieService.getAll(searchParam);
   }
-  @Get('/most-popular')
+  @Get('most-popular')
   async getMostPopular() {
     return this.movieService.getMostPopular();
   }
 
-  @Post('/update-count-opened')
+  @Put('/update-count-opened')
   @HttpCode(HttpStatus.OK)
   async updateCountOpened(@Body('slug') slug: string) {
     return this.movieService.updateCountOpened(slug);

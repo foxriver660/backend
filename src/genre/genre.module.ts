@@ -12,7 +12,7 @@ import { GenreService } from './genre.service';
     TypegooseModule.forFeature([
       {
         typegooseClass: GenreModel,
-        schemaOptions: { collection: 'genre' },
+        schemaOptions: { collection: 'genres' },
       },
     ]),
     ConfigModule,

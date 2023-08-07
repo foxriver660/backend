@@ -24,7 +24,7 @@ export class ActorController {
   @UsePipes(new ValidationPipe())
   @Post()
   @HttpCode(HttpStatus.OK)
-  @Auth()
+  @Auth('admin')
   async createGenre() {
     return this.actorService.create();
   }

@@ -11,7 +11,7 @@ import { MovieModel } from './movie.model';
     TypegooseModule.forFeature([
       {
         typegooseClass: MovieModel,
-        schemaOptions: { collection: 'Movie' },
+        schemaOptions: { collection: 'movies' },
       },
     ]),
   ],

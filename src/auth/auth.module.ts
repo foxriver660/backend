@@ -13,7 +13,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     TypegooseModule.forFeature([
       {
         typegooseClass: UserModel,
-        schemaOptions: { collection: 'User' },
+        schemaOptions: { collection: 'users' },
       },
     ]),
     ConfigModule,
