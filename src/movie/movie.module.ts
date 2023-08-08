@@ -3,6 +3,7 @@ import { MovieController } from './movie.controller';
 import { MovieService } from './movie.service';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { MovieModel } from './movie.model';
+import { TelegramModule } from 'src/telegram/telegram.module';
 
 @Module({
   exports: [MovieService],
@@ -15,6 +16,7 @@ import { MovieModel } from './movie.model';
         schemaOptions: { collection: 'movies' },
       },
     ]),
+    TelegramModule,
   ],
 })
 export class MovieModule {}

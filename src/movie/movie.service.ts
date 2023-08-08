@@ -4,11 +4,13 @@ import { InjectModel } from 'nestjs-typegoose';
 import { MovieModel } from './movie.model';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { Types } from 'mongoose';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 @Injectable()
 export class MovieService {
   constructor(
-    @InjectModel(MovieModel) private readonly MovieModel: ModelType<MovieModel>
+    @InjectModel(MovieModel) private readonly MovieModel: ModelType<MovieModel>,
+    private readonly telegramService: TelegramService
   ) {}
   async byId(_id: string) {
     const doc = await this.MovieModel.findById(_id);
@@ -65,6 +67,10 @@ export class MovieService {
     return doc;
   }
   async update(_id: string, dto: CreateMovieDto) {
+    if (!dto.isSendTelegram) {
+      await this.sendNotification(dto);
+      dto.isSendTelegram = 'true';
+    }
     const doc = await this.MovieModel.findByIdAndUpdate(_id, dto, {
       new: true,
     }).exec();
@@ -120,5 +126,24 @@ export class MovieService {
       .sort({ countOpened: -1 })
       .populate('genres')
       .exec();
+  }
+  async sendNotification(dto: CreateMovieDto) {
+    await this.telegramService.sendPhoto(
+      'https://w7.pngwing.com/pngs/691/866/png-transparent-computer-icons-button-arrow-successful-text-number-symbol.png'
+    );
+    const msg = `<b>${dto.title}</b>`;
+
+    await this.telegramService.sendMessage(msg, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              url: `https://www.youtube.com/watch?v=${dto.videoUrl}`,
+              text: 'Watch',
+            },
+          ],
+        ],
+      },
+    });
   }
 }
