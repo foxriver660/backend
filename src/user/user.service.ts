@@ -4,6 +4,7 @@ import { genSalt, hash } from 'bcryptjs';
 import { InjectModel } from 'nestjs-typegoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserModel } from './user.model';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -64,5 +65,19 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     return doc;
+  }
+  async toggleFavoriteMovies(movieId: Types.ObjectId, user: UserModel) {
+    const { _id, favorites } = user;
+    await this.UserModel.findByIdAndUpdate(_id, {
+      favorites: favorites.includes(movieId)
+        ? favorites.filter((id) => id.toString() !== movieId.toString())
+        : [...favorites, movieId],
+    });
+  }
+  async getFavoriteMovies(_id: Types.ObjectId) {
+    return this.UserModel.findById(_id, 'favorites')
+      .populate({ path: 'favorites', populate: { path: 'genres' } })
+      .exec()
+      .then((data) => data.favorites);
   }
 }
