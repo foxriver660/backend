@@ -41,6 +41,16 @@ export class MovieService {
     }
     return doc;
   }
+  async updateRating(id: Types.ObjectId, newRating: number) {
+    return this.MovieModel.findByIdAndUpdate(
+      id,
+      {
+        rating: newRating,
+      },
+      { new: true }
+    ).exec();
+  }
+
   async updateCountOpened(slug: string) {
     const doc = await this.MovieModel.findOneAndUpdate(
       { slug },

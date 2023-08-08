@@ -6,6 +6,7 @@ import { UserModel } from './user.model';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
+  exports: [UserService],
   providers: [UserService],
   controllers: [UserController],
   imports: [

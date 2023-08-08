@@ -5,6 +5,7 @@ import { TypegooseModule } from 'nestjs-typegoose';
 import { MovieModel } from './movie.model';
 
 @Module({
+  exports: [MovieService],
   controllers: [MovieController],
   providers: [MovieService],
   imports: [
