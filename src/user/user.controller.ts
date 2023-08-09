@@ -16,24 +16,25 @@ import { IdValidationPipe } from 'src/pipes/id.validation.pipe';
 import { User } from './decorators/users.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { Types } from 'mongoose';
+import { UserModel } from './user.model';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЕЙ
   @Get()
   @Auth('admin')
   async getUsers(@Query('searchParam') searchParam?: string) {
     return this.userService.getAll(searchParam);
   }
-  // ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЯ
+
   @Get('profile')
   @Auth()
   async getProfile(@User('_id') _id: string) {
     return this.userService.byId(_id);
   }
-  // АПДЕЙТ ПОЛЬЗОВАТЕЛЯ
+
   @UsePipes(new ValidationPipe())
   @Put('profile')
   @HttpCode(HttpStatus.OK)
@@ -44,20 +45,35 @@ export class UserController {
   ) {
     return this.userService.updateProfile(_id, profile);
   }
-  // ПОЛУЧЕНИЕ КОЛИЧЕСТВА ПОЛЬЗОВАТЕЛЕЙ
+
+  @Get('profile/favorites')
+  @Auth()
+  async getFavoritesMovie(@User('_id') _id: Types.ObjectId) {
+    return this.userService.getFavoriteMovies(_id);
+  }
+
+  @Put('profile/favorites')
+  @HttpCode(HttpStatus.OK)
+  @Auth()
+  async toggleFavoritesMovie(
+    @User() user: UserModel,
+    @Body('movieId', IdValidationPipe) movieId: Types.ObjectId
+  ) {
+    return this.userService.toggleFavoriteMovies(movieId, user);
+  }
+
   @Get('count')
   @Auth('admin')
   async getCountUsers() {
     return this.userService.getCount();
   }
 
-  // ПОЛУЧЕНИЕ КОНКРЕТНОГО ПОЛЬЗОВАТЕЛЯ
   @Get(':id')
   @Auth('admin')
   async getUser(@Param('id', IdValidationPipe) _id: string) {
     return this.userService.byId(_id);
   }
-  // АПДЕЙТ ПОЛЬЗОВАТЕЛЯ АДМИН
+
   @UsePipes(new ValidationPipe())
   @Put(':id')
   @HttpCode(HttpStatus.OK)
@@ -69,7 +85,6 @@ export class UserController {
     return this.userService.updateProfile(_id, profile);
   }
 
-  // УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @Auth('admin')
