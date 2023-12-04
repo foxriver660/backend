@@ -38,8 +38,8 @@ export class GenreController {
     return this.genreService.getCollectionsGenre();
   }
   @Get()
-  async getAll(@Query('searchParam') searchParam?: string) {
-    return this.genreService.getAll(searchParam);
+  async getAll(@Query('searchTerm') searchTerm?: string) {
+    return this.genreService.getAll(searchTerm);
   }
   @Get(':id')
   @Auth('admin')

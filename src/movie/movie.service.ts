@@ -94,13 +94,13 @@ export class MovieService {
     return doc._id;
   }
 
-  async getAll(searchParam?: string) {
+  async getAll(searchTerm?: string) {
     let options = {};
-    if (searchParam) {
+    if (searchTerm) {
       options = {
         $or: [
           {
-            title: new RegExp(searchParam, 'i'),
+            title: new RegExp(searchTerm, 'i'),
           },
         ],
       };

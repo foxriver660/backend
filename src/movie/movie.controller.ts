@@ -46,8 +46,8 @@ export class MovieController {
     return this.movieService.byGenres(genresIds);
   }
   @Get()
-  async getAll(@Query('searchParam') searchParam?: string) {
-    return this.movieService.getAll(searchParam);
+  async getAll(@Query('searchTerm') searchTerm?: string) {
+    return this.movieService.getAll(searchTerm);
   }
   @Get('most-popular')
   async getMostPopular() {

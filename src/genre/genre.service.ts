@@ -50,7 +50,6 @@ export class GenreService {
     const genres = await this.getAll();
     const collection = await Promise.all(
       genres.map(async (genre) => {
-        /*   console.log(genre); */
         const moviesByGenre = await this.movieService.byGenres([genre._id]);
 
         const result = {
@@ -58,6 +57,7 @@ export class GenreService {
           image: moviesByGenre[0] ? moviesByGenre[0].bigPoster : null,
           slug: genre.slug,
           title: genre.name,
+          icon: genre.icon,
         };
         return result;
       })
@@ -66,19 +66,19 @@ export class GenreService {
   }
 
   // ! GET ALL GENRES
-  async getAll(searchParam?: string) {
+  async getAll(searchTerm?: string) {
     let options = {};
-    if (searchParam) {
+    if (searchTerm) {
       options = {
         $or: [
           {
-            name: new RegExp(searchParam, 'i'),
+            name: new RegExp(searchTerm, 'i'),
           },
           {
-            slug: new RegExp(searchParam, 'i'),
+            slug: new RegExp(searchTerm, 'i'),
           },
           {
-            description: new RegExp(searchParam, 'i'),
+            description: new RegExp(searchTerm, 'i'),
           },
         ],
       };
